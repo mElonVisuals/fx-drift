@@ -27,13 +27,9 @@ RUN npm run build
 # We use a lightweight Nginx Alpine image for serving the static content.
 FROM nginx:alpine
 
-# Remove default Nginx configuration to avoid conflicts and ensure our config is used.
-RUN rm /etc/nginx/conf.d/default.conf
-
-# Copy a custom Nginx configuration file.
-# This configuration is essential for single-page applications (SPAs) like React,
-# ensuring that all non-file requests are routed back to index.html for client-side routing.
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy the custom Nginx configuration file directly to the main Nginx config path.
+# This ensures our configuration completely replaces the default one, simplifying setup.
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy the built React application from the 'build' stage to Nginx's web root.
 # The '/app/dist' path must match the output directory of your 'npm run build' command.
@@ -49,7 +45,7 @@ RUN chmod -R 755 /usr/share/nginx/html
 RUN ls -lR /usr/share/nginx/html
 
 # Print the Nginx configuration to verify it's correctly placed
-RUN cat /etc/nginx/conf.d/default.conf
+RUN cat /etc/nginx/nginx.conf
 # --- END DEBUGGING STEPS ---
 
 # Expose port 80. Nginx listens for HTTP traffic on port 80 by default.
