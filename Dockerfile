@@ -44,6 +44,14 @@ COPY --from=build /app/dist /usr/share/nginx/html
 RUN chown -R nginx:nginx /usr/share/nginx/html
 RUN chmod -R 755 /usr/share/nginx/html
 
+# --- DEBUGGING STEPS (These will show in your Coolify build logs) ---
+# List the contents of the Nginx web root to verify files are copied
+RUN ls -lR /usr/share/nginx/html
+
+# Print the Nginx configuration to verify it's correctly placed
+RUN cat /etc/nginx/conf.d/default.conf
+# --- END DEBUGGING STEPS ---
+
 # Expose port 80. Nginx listens for HTTP traffic on port 80 by default.
 EXPOSE 80
 
