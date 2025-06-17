@@ -1,0 +1,29 @@
+server {
+    listen 80;
+    server_tokens off; # Hide Nginx version for security
+
+    root /usr/share/nginx/html; # Path to your built React app
+    index index.html; # Default file to serve
+
+    # This crucial block handles client-side routing for SPAs.
+    # It tries to serve the requested URI. If it's not a file ($uri) or a directory ($uri/),
+    # it falls back to serving index.html, allowing React Router to handle the route.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Custom error pages (optional, but good practice)
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
+    # Gzip compression for faster loading
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+}
