@@ -39,6 +39,11 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # The '/app/dist' path must match the output directory of your 'npm run build' command.
 COPY --from=build /app/dist /usr/share/nginx/html
 
+# Set appropriate permissions for Nginx to read and serve files.
+# This is a common fix if Nginx cannot access the files it needs to serve.
+RUN chown -R nginx:nginx /usr/share/nginx/html
+RUN chmod -R 755 /usr/share/nginx/html
+
 # Expose port 80. Nginx listens for HTTP traffic on port 80 by default.
 EXPOSE 80
 
