@@ -5,15 +5,15 @@ FROM node:20-alpine AS build
 # Set the working directory inside the container for the build process.
 WORKDIR /app
 
-# Copy package.json and yarn.lock (or package-lock.json if you use npm)
-# This step is crucial for leveraging Docker's build cache.
-# If these files don't change, Docker won't re-run 'yarn install'.
-COPY package.json yarn.lock ./
+# Copy package.json and package-lock.json (for npm users).
+# If you are using 'yarn', you should change this line to:
+# COPY package.json yarn.lock ./
+COPY package.json package-lock.json ./
 
 # Install project dependencies.
-# Using --frozen-lockfile ensures that the exact versions from yarn.lock are used,
-# leading to consistent builds. If using npm, use 'npm ci'.
-RUN yarn install --frozen-lockfile
+# If you are using 'yarn', change this line to:
+# RUN yarn install --frozen-lockfile
+RUN npm ci --force
 
 # Copy the rest of your application source code into the container.
 COPY . .
@@ -21,7 +21,7 @@ COPY . .
 # Build the React application for production.
 # Vite typically outputs optimized static files into a 'dist' directory.
 # This command must match your 'build' script in package.json (e.g., "vite build").
-RUN yarn build
+RUN npm run build
 
 # Stage 2: Serve the static files with Nginx
 # We use a lightweight Nginx Alpine image for serving the static content.
@@ -36,7 +36,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the built React application from the 'build' stage to Nginx's web root.
-# The '/app/dist' path must match the output directory of your 'yarn build' command.
+# The '/app/dist' path must match the output directory of your 'npm run build' command.
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # Expose port 80. Nginx listens for HTTP traffic on port 80 by default.
