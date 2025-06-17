@@ -30,7 +30,7 @@ function App() {
         "https://district.melonvisuals.me/bmwheaven.png",// Blue background, black text
         "https://district.melonvisuals.me/bmweventfx.png"      // Very dark blue, blue text
       ],
-      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&controls=0&mute=1" // Placeholder, replace with actual trailer
+      videoUrl: "https://www.youtube.com/embed/vBmAkF9kkpo?autoplay=0&controls=0&mute=1" // Placeholder, replace with actual trailer
     },
     news: {
       title: "Latest Race Updates",
